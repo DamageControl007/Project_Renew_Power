@@ -52,8 +52,14 @@ def Interaction_coeff(rows, cols, n_comp):
         Ut.append([])
         for i in range(0,rows*(n_comp)):
             if (i%(n_comp)==0):
+                sum=0
                 num=RawData.iat[int(i/(n_comp)),j+2]
-            Ut[j].append(Qx[i%(n_comp)]*A*frac[i%(n_comp)]*num)
+            temp=Qx[i%(n_comp)]*A*frac[i%(n_comp)]*num
+            sum+=temp
+            Ut[j].append(temp)
+            if (i%(n_comp)==n_comp-1):
+                Ut[j].append(sum)
+            
     return Ut
 
 def transpose(l1):
