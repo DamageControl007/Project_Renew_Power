@@ -59,7 +59,6 @@ def Interaction_coeff(rows, cols, n_comp):
             Ut[j].append(temp)
             if (i%(n_comp)==n_comp-1):
                 Ut[j].append(sum)
-            
     return Ut
 
 def transpose(l1):
@@ -91,6 +90,8 @@ list.pop(0)
 list.pop(0)
 df = pd.DataFrame(Ut,columns=list)
 print(df)
-df.to_excel("Ut_values.xlsx")
+
+df.to_excel("Ut_values.xlsx", sheet_name="Sample values")
+
 print("AFter normalization")
 Area(0)
