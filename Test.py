@@ -77,40 +77,40 @@ import matplotlib.pyplot as plt
 # Ux,Uy,Uz=Vx/norm,Vy/norm,Vz/norm
 # print(Ux**2+Uy**2+Uz**2)
 
-time=[8,9,10,11,12,13,14,15,16,17]
-BeerLamberts=[0.0045538
-,0.068910373
-,0.224095718
-,0.460120545
-,0.468658556
-,0.536349359
-,0.522843227
-,0.380165418
-,0.280323374
-,0.057353561
-
-]
-Direct=[0.00466
-,0.06897
-,0.22403
-,0.46147
-,0.4601
-,0.53689
-,0.53475
-,0.38196
-,0.28104
-,0.05764
-
-]
-
-plt.plot(time,Direct, marker='H', color='r', label='Direct irradiance')
-plt.plot(time,BeerLamberts, marker='+', color='g', label='Beer-Lamberts value')
-plt.legend(loc='lower left', bbox_to_anchor=(0.6,0.5))
-plt.xlabel('Time')
-plt.ylabel('I/Io')
-plt.title('Simulation vs beer lambert formula (for January)')
-plt.legend()
-plt.show()
+# time=[8,9,10,11,12,13,14,15,16,17]
+# BeerLamberts=[0.0045538
+# ,0.068910373
+# ,0.224095718
+# ,0.460120545
+# ,0.468658556
+# ,0.536349359
+# ,0.522843227
+# ,0.380165418
+# ,0.280323374
+# ,0.057353561
+#
+# ]
+# Direct=[0.00466
+# ,0.06897
+# ,0.22403
+# ,0.46147
+# ,0.4601
+# ,0.53689
+# ,0.53475
+# ,0.38196
+# ,0.28104
+# ,0.05764
+#
+# ]
+#
+# plt.plot(time,Direct, marker='H', color='r', label='Direct irradiance')
+# plt.plot(time,BeerLamberts, marker='+', color='g', label='Beer-Lamberts value')
+# plt.legend(loc='lower left', bbox_to_anchor=(0.6,0.5))
+# plt.xlabel('Time')
+# plt.ylabel('I/Io')
+# plt.title('Simulation vs beer lambert formula (for January)')
+# plt.legend()
+# plt.show()
 
 
 # FileName="RawData1.xlsx"
@@ -129,3 +129,131 @@ plt.show()
 #
 # for row in data_top.index:
 #     print(row, end = " ")
+
+
+
+
+
+# CHecking the behaviour of Extinction_coeff
+
+cm=pow(10,7)
+initial=50
+add=10
+dia=initial
+M_re1=1.57                                                 # Real part of particle R.I
+M_im1=0.53
+N_re=1
+M1=complex(float(M_re1),float(-M_im1))
+M_re2=1.50                                                 # Real part of particle R.I
+M_im2=0
+N_re2=1
+M2=complex(float(M_re2),float(-M_im2))
+M_re3=1.38                                                 # Real part of particle R.I
+M_im3=0
+N_re=1
+M3=complex(float(M_re3),float(-M_im3))
+M_re4=1.6                                                 # Real part of particle R.I
+M_im4=0
+N_re=1
+M4=complex(float(M_re4),float(-M_im4))
+frac=[0.05,0.55,0.1,0.3]
+
+wavl=550/cm
+extinction1=[]
+extinction2=[]
+extinction3=[]
+extinction4=[]
+diameter=[]
+interaction1=[]
+interaction2=[]
+interaction3=[]
+interaction4=[]
+size=[]
+pm25=200
+
+for i in range(0,145):
+    DIA=dia/cm
+    N=(pm25*pow(10,-12))/(1.5*(4/3)*np.pi*(DIA/2)**3)
+    A=np.pi*(DIA/2)**2
+    X=(3.14*DIA*N_re)/wavl
+    ans1=mp.mie(M1,X)
+    Qext1=ans1[0]
+    Ut1=Qext1*A*N
+    ans2=mp.mie(M2,X)
+    Qext2=ans2[0]
+    Ut2=Qext2*A*N
+    ans3=mp.mie(M3,X)
+    Qext3=ans3[0]
+    Ut3=Qext3*A*N
+    ans4=mp.mie(M4,X)
+    Qext4=ans4[0]
+    Ut4=Qext4*A*N
+    extinction1.append(Qext1)
+    interaction1.append(Ut1)
+    extinction2.append(Qext2)
+    interaction2.append(Ut2)
+    extinction3.append(Qext3)
+    interaction3.append(Ut3)
+    extinction4.append(Qext4)
+    interaction4.append(Ut4)
+    size.append(A)
+    diameter.append(dia)
+    dia+=add
+
+total_Ut=[]
+
+for i in range(0,145):
+    total_Ut.append(interaction1[i]+interaction2[i]+interaction3[i]+interaction4[i])
+
+#plt.plot(diameter,extinction1, color='r')
+# plt.plot(diameter,extinction1, color='b', label="RI=1.57-i0.53")
+# plt.plot(diameter,extinction2, color='r', label="RI=1.5")
+# plt.plot(diameter,extinction4,color='purple', label="RI=1.6")
+# plt.plot(diameter,extinction3, color='g', label="RI=1.38")
+plt.plot(diameter,interaction1, color='b', label="RI=1.57-i0.53")
+plt.plot(diameter,interaction2, color='r', label="RI=1.5")
+plt.plot(diameter,interaction4,color='purple', label="RI=1.6")
+plt.plot(diameter,interaction3, color='g', label="RI=1.38")
+
+#plt.plot(diameter,size, color='green')
+plt.xlabel("diameter (in nm)")
+#plt.ylabel("Extinction efficiency")
+#plt.ylabel("Interaction coefficient")
+plt.ylabel("Extinction efficiency")
+
+plt.title("Comparing Ut of different RI")
+plt.legend()
+plt.show()
+val=10
+Height=[0]*val
+print(Height)
+
+
+def Number(Mass,dia):
+    V=(4/3)*np.pi*((dia/2)**3)
+    N=(Mass/V)*(pow(10,-12)/1.5)
+    return N
+def Area(dia):
+    A=np.pi*(dia/2)**2
+    return A
+
+cm=pow(10,7)
+Mass=200   #in ug/m3
+dia1=500/cm   #in nm
+dia2=200/cm   #in nm
+x=0.8
+frac=[x,1-x]
+M_re=1.5                                                 # Real part of particle R.I
+M_im=0
+N_re=1
+wavl=550/cm
+M=complex(float(M_re),float(-M_im))
+X1=(3.14*dia1*N_re)/wavl
+ans1=mp.mie(M,X1)
+X2=(3.14*dia2*N_re)/wavl
+ans2=mp.mie(M,X2)
+Ut1=Number(Mass*frac[0], dia1)*Area(dia1)*ans1[0]
+Ut2=Number(Mass*frac[1], dia2)*Area(dia2)*ans2[0]
+print("Ut1= ", Ut1)
+print("Ut2= ", Ut2)
+print("total Ut= ", Ut1+Ut2)

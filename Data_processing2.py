@@ -28,14 +28,14 @@ def Excel(df_list,file,sheet,itr):
 
 def Normalized( rows, cols,df_num):
     Normal=RawData[df_num].to_numpy()
-    Total=Normal.sum(axis=1)
-    print("sum of rows: ", Total)
-    for i in range(0, rows):
-        print("Value of Total[", i, "]=", Total[i])
-        for j in range(0, cols):
-            Normal[i,j+1]=Normal[i,j+1]/Total[i]
-    print("The normalized distribution is below: ")
-    print("sum of normalized: ", Normal.sum(axis=1))
+    # Total=Normal.sum(axis=1)
+    # print("sum of rows: ", Total)
+    # for i in range(0, rows):
+    #     print("Value of Total[", i, "]=", Total[i])
+    #     for j in range(0, cols):
+    #         Normal[i,j+1]=Normal[i,j+1]/Total[i]
+    # print("The normalized distribution is below: ")
+    # print("sum of normalized: ", Normal.sum(axis=1))
     return Normal
 
 def Area(dia):
@@ -148,10 +148,9 @@ for i in range(0,months):
     print(df_g[i])
 
 
-#Excel(df_list,r"G:\OneDrive - IIT Delhi\Courses\Sem8\MTP CLD880\New Codes in Jupyter\Final excel files\All_UT_values",sheet,months)
-print("df_list: ", df_list)
+Excel(df_list,r"G:\OneDrive - IIT Delhi\Courses\Sem8\MTP CLD880\New Codes in Jupyter\Final excel files\New_Ut_values",sheet,months)
 #Excel(df_g,r"G:\OneDrive - IIT Delhi\Courses\Sem8\MTP CLD880\New Codes in Jupyter\Final excel files\All_anisotropy_values",sheet,months)
-#Cumulative(df_list,sheet,months,list)
+Cumulative(df_list,sheet,months,list)
 
 # RawData=pd.read_excel(FileName)
 # print(RawData)

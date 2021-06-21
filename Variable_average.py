@@ -44,7 +44,7 @@ def Initialize_Dirctions(Time):
 def Simulate(itr,Time,mass_factor):
     global direct, PBL_Height
     dia,dia_index=diameter(Time)
-    Ut=Interaction_coeff(Time)*mass_factor*2
+    Ut=Interaction_coeff(Time)*mass_factor
     print("Ut= ", Ut)
     Vx,Vy,Vz=Initialize_Dirctions(Time)
 
@@ -138,6 +138,18 @@ def Direction_cosines(Ux,Uy,Uz,g):
         Cosines[2]=(sin_theta*(Uz*Uy*cos_phi + Ux*sin_phi)/(Usqr)) + Uy*cos_theta
     return Cosines
 
+def FirstInput():
+    global PM25, average
+    print("Do you want to feed average PM2.5 concentration for the period (otherwise historical data will be taken) [y/n]")
+    answer=str(input())
+    if (answer=='y'):
+        print("PM2.5 concentration (in ug/m3):")
+        PM25=float(intput())
+    else if (answer!="n" and answer!="y"):
+        print("Please respond in 'y' or 'n' only!")
+        FirstInput()
+    else:
+        average=True
 # Global Variables
 
 
@@ -149,24 +161,43 @@ morning=8
 Time_Range=10
 photon=[]
 
-print("Enter month: ")
-Month=int(input())
-print("enter date: ")
-day=int(input())
-print("Enter time in 24 hour format (only mention the hour mark)")
-Day_Time=int(input())
-print("Enter PM2.5 concentration in ug/m3: ")
-PM25=int(input())
+# Initializing variables
+PM25=0
+average=False
 
+#take input of range of months for average
+print("Starting month:")
+FirstMonth=int(input())
+print("Ending month:")
+LastMonth=int(input())
+FirstInput()
 
-#initialize for index purpose
-month=Month-1
 Ut_file=pd.ExcelFile(r"G:\OneDrive - IIT Delhi\Courses\Sem8\MTP CLD880\New Codes in Jupyter\Final excel files\Ut_values.xlsx")
 Cumulative_file=pd.ExcelFile(r"G:\OneDrive - IIT Delhi\Courses\Sem8\MTP CLD880\New Codes in Jupyter\Final excel files\Cumulative_values.xlsx")
 Anisotropy_file = pd.ExcelFile(r"G:\OneDrive - IIT Delhi\Courses\Sem8\MTP CLD880\New Codes in Jupyter\Final excel files\All_anisotropy_values.xlsx")
 Normalized_mass_file=pd.ExcelFile(r"G:\OneDrive - IIT Delhi\Courses\Sem8\MTP CLD880\New Codes in Jupyter\Final excel files\Normalized_Mass.xlsx")
 BoundaryLayer=pd.ExcelFile(r"G:\OneDrive - IIT Delhi\Courses\Sem8\MTP CLD880\New Codes in Jupyter\Final excel files\PBLH_Yearly_average.xlsx")
 
+def AvgPBLH(Start, Last, Time_Range):
+    Height=[0]*Time_Range
+    divide=Last-Start
+    for i in range(Start-1, Last-1):
+        df_PBL=pd.read_excel(BoundaryLayer, i)
+        for j in range(0,Time_Range):
+            Height[j]+=df_PBL.iat[j,1]/divide
+    return Height
+
+def            
+
+
+
+
+
+
+
+
+#initialize for index purpose
+month=Month-1
 df_Ut=pd.read_excel(Ut_file, month)
 df_cum=pd.read_excel(Cumulative_file, month)
 df_g= pd.read_excel(Anisotropy_file, month)
@@ -175,6 +206,11 @@ df_PBL=pd.read_excel(BoundaryLayer, month)
 
 rows,cols=df_Ut.shape
 cols=cols-1
+
+
+
+
+
 nm=1
 Time=Day_Time-morning
 PBL_Height=df_PBL.iat[Time+1, 1]*100

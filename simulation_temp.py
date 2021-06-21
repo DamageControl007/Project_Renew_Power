@@ -44,7 +44,7 @@ def Initialize_Dirctions(Time):
 def Simulate(itr,Time,mass_factor):
     global direct, PBL_Height
     dia,dia_index=diameter(Time)
-    Ut=Interaction_coeff(Time)*mass_factor*2
+    Ut=Interaction_coeff(Time)*mass_factor
     print("Ut= ", Ut)
     Vx,Vy,Vz=Initialize_Dirctions(Time)
 
@@ -149,15 +149,17 @@ morning=8
 Time_Range=10
 photon=[]
 
-print("Enter month: ")
-Month=int(input())
-print("enter date: ")
-day=int(input())
-print("Enter time in 24 hour format (only mention the hour mark)")
-Day_Time=int(input())
-print("Enter PM2.5 concentration in ug/m3: ")
-PM25=int(input())
+# print("Enter month: ")
+# Month=int(input())
+# print("enter date: ")
+# day=int(input())
+# print("Enter time in 24 hour format (only mention the hour mark)")
+# Day_Time=int(input())
+# print("Enter PM2.5 concentration in ug/m3: ")
+# PM25=int(input())
 
+Month=1
+day=15
 
 #initialize for index purpose
 month=Month-1
@@ -166,22 +168,32 @@ Cumulative_file=pd.ExcelFile(r"G:\OneDrive - IIT Delhi\Courses\Sem8\MTP CLD880\N
 Anisotropy_file = pd.ExcelFile(r"G:\OneDrive - IIT Delhi\Courses\Sem8\MTP CLD880\New Codes in Jupyter\Final excel files\All_anisotropy_values.xlsx")
 Normalized_mass_file=pd.ExcelFile(r"G:\OneDrive - IIT Delhi\Courses\Sem8\MTP CLD880\New Codes in Jupyter\Final excel files\Normalized_Mass.xlsx")
 BoundaryLayer=pd.ExcelFile(r"G:\OneDrive - IIT Delhi\Courses\Sem8\MTP CLD880\New Codes in Jupyter\Final excel files\PBLH_Yearly_average.xlsx")
-
+Total_mass_file=pd.ExcelFile(r"G:\OneDrive - IIT Delhi\Courses\Sem8\MTP CLD880\New Codes in Jupyter\Final excel files\Total_Mass.xlsx")
+Ut_file=pd.ExcelFile(r"G:\OneDrive - IIT Delhi\Courses\Sem8\MTP CLD880\New Codes in Jupyter\Final excel files\New_Ut_values.xlsx")
 df_Ut=pd.read_excel(Ut_file, month)
 df_cum=pd.read_excel(Cumulative_file, month)
 df_g= pd.read_excel(Anisotropy_file, month)
 df_mass=pd.read_excel(Normalized_mass_file,month)
 df_PBL=pd.read_excel(BoundaryLayer, month)
-
 rows,cols=df_Ut.shape
 cols=cols-1
-nm=1
-Time=Day_Time-morning
-PBL_Height=df_PBL.iat[Time+1, 1]*100
-print("PBL_Height= ", PBL_Height)
-mass_factor=(PM25*0.3)/df_mass.iat[Time,1]
-print("mass factor= ", mass_factor)
+nm=10
+#Time=Day_Time-morning
+
+
 for i in range(0,nm):
+    Time=i
+    print("time= ", i)
+    PBL_Height=df_PBL.iat[Time+1, 1]*100
+    print("PBL_Height= ", PBL_Height)
+    #PM25=df_PBL.iat[Time+1, 2]
+    PM25=100
+    print("PM2.5= ", PM25)
+    print("mass= ", df_mass.iat[Time,1])
+    mass_factor=(PM25*0.3)/df_mass.iat[Time,1]
+    print("mass factor= ", mass_factor)
+
+
     path=0
     mass=0
     Month=1
